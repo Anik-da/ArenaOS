@@ -1,0 +1,8 @@
+[2026-07-14 09:37:05:375] [[33mwarn[39m]: [33mFirebase initialization failed: No Firebase configuration details provided in environment variables.. Initializing Mock Firestore/Auth Fallback.[39m
+[2026-07-14 09:37:06:376] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-14 09:37:06:376] [[32minfo[39m]: [32m ARES AI Platform Axes Backend running in [development][39m
+[2026-07-14 09:37:06:376] [[32minfo[39m]: [32m REST APIs served at http://localhost:5000/api[39m
+[2026-07-14 09:37:06:376] [[32minfo[39m]: [32m Swagger Docs available at http://localhost:5000/docs[39m
+[2026-07-14 09:37:06:376] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
+[2026-07-14 09:37:06:376] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-14 09:37:10:3710] [[32minfo[39m]: [32mFetching weather details for stadium: stadium_main_1[39m
