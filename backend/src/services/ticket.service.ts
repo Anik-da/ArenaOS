@@ -2,15 +2,13 @@ import { TicketRepository, MatchRepository } from '../repositories/specialized.r
 import { Ticket } from '../models';
 import logger from '../utilities/logger';
 
-export class TicketService {
+class TicketService {
   async bookTicket(userId: string, data: Omit<Ticket, 'id' | 'userId' | 'qrCode' | 'status' | 'createdAt'>) {
     logger.info(`Booking ticket for user ${userId} on match ${data.matchId}`);
     
-    // Check if match exists
     const match = await MatchRepository.getById(data.matchId);
     if (!match) throw new Error('Match fixture does not exist.');
 
-    // Check if seat already taken
     const queryResult = await TicketRepository.queryAdvanced({
       filters: [
         { field: 'matchId', op: '==', value: data.matchId },
@@ -24,7 +22,6 @@ export class TicketService {
       throw new Error(`Seat ${data.seatNumber} is already booked for this match.`);
     }
 
-    // Generate secure ticket hash for QR codes
     const qrPayload = JSON.stringify({
       matchId: data.matchId,
       seatNumber: data.seatNumber,
@@ -65,6 +62,30 @@ export class TicketService {
 
     await TicketRepository.update(ticket.id!, updatePayload);
     return { ...ticket, ...updatePayload };
+  }
+
+  async getUserTickets(userId: string, options: any) {
+    return await TicketRepository.queryAdvanced(options);
+  }
+
+  async cancelTicket(ticketId: string, userId: string) {
+    const ticket = await TicketRepository.getById(ticketId);
+    if (!ticket) throw new Error('Ticket not found');
+    if (ticket.userId !== userId) throw new Error('Unauthorised to cancel this ticket');
+
+    await TicketRepository.update(ticketId, { status: 'cancelled' });
+    return { ticketId, status: 'cancelled' };
+  }
+
+  async getTicketStats(matchId: string) {
+    const all = await TicketRepository.query('matchId', '==', matchId);
+    return {
+      matchId,
+      totalSold: all.length,
+      validatedCount: all.filter(t => t.status === 'validated').length,
+      cancelledCount: all.filter(t => t.status === 'cancelled').length,
+      totalRevenue: all.reduce((sum, t) => sum + (t.price || 0), 0),
+    };
   }
 }
 

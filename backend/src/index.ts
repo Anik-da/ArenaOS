@@ -49,6 +49,9 @@ app.use(cors({ origin: config.cors.origin === '*' ? '*' : config.cors.origin.spl
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+import auditMiddleware from './middlewares/audit.middleware';
+app.use(auditMiddleware);
+
 // Morgan request logging mapped to winston stream
 app.use(morgan('combined', { stream: { write: (message) => logger.http(message.trim()) } }));
 

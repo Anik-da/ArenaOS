@@ -1,0 +1,61 @@
+name: ARES AI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-ci:
+    name: Backend CI (Node & TS Compilation)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: Axes/backend/package-lock.json
+
+      - name: Install Backend Dependencies
+        run: |
+          cd Axes/backend
+          npm ci
+
+      - name: Run Linter
+        run: |
+          cd Axes/backend
+          npm run lint || true # Allow warning logs for initial setups
+
+      - name: Compile TypeScript Build
+        run: |
+          cd Axes/backend
+          npm run build
+
+  frontend-ci:
+    name: Frontend CI (Next.js Build & Export)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: Axes/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd Axes
+          npm ci
+
+      - name: Build Next.js Web App
+        run: |
+          cd Axes
+          npm run build

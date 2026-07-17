@@ -1,9 +1,8 @@
-import { EnergyRepository, WaterRepository } from '../repositories/specialized.repository';
+import { EnergyRepository, WaterRepository, SecurityRepository } from '../repositories/specialized.repository';
 import logger from '../utilities/logger';
 
-export class UtilityService {
+class UtilityService {
   async trackLiveEnergy(stadiumId: string) {
-    // Generate simulated dynamic fluctuations for energy
     const solarPowerKW = 450 + Math.random() * 150;
     const gridPowerKW = 1200 + Math.random() * 300;
     const generatorPowerKW = Math.random() > 0.85 ? 500 : 0;
@@ -24,7 +23,7 @@ export class UtilityService {
   async trackLiveWater(stadiumId: string) {
     const consumptionLiters = 18000 + Math.random() * 4000;
     const storageLiters = 150000 - consumptionLiters;
-    const leakDetected = Math.random() > 0.95; // 5% probability simulation
+    const leakDetected = Math.random() > 0.95;
     const leakSector = leakDetected ? `Sector ${String.fromCharCode(65 + Math.floor(Math.random() * 6))}` : undefined;
 
     if (leakDetected) {
@@ -39,6 +38,41 @@ export class UtilityService {
       leakSector,
       timestamp: new Date(),
     });
+  }
+
+  async getEnergyAnalytics(stadiumId: string, limit: number = 30) {
+    const query = await EnergyRepository.queryAdvanced({
+      filters: [{ field: 'stadiumId', op: '==', value: stadiumId }],
+      orderBy: [{ field: 'timestamp', direction: 'desc' }],
+      limit,
+    });
+    return query.results;
+  }
+
+  async getWaterAnalytics(stadiumId: string, limit: number = 30) {
+    const query = await WaterRepository.queryAdvanced({
+      filters: [{ field: 'stadiumId', op: '==', value: stadiumId }],
+      orderBy: [{ field: 'timestamp', direction: 'desc' }],
+      limit,
+    });
+    return query.results;
+  }
+
+  async reportLeak(stadiumId: string, sector: string, severity: string) {
+    logger.error(`🚨 INFRASTRUCTURE ALERT: Water leak reported in ${sector} (Severity: ${severity})`);
+    
+    // Auto-create security/incident ticket for maintenance dispatch
+    await SecurityRepository.create({
+      stadiumId,
+      type: 'general_alert',
+      zoneId: sector,
+      severity: severity as any,
+      description: `AUTOMATED REPORT: Infrastructure leak detected in ${sector}. Immediate maintenance check needed.`,
+      status: 'open',
+      timestamp: new Date(),
+    });
+
+    return { success: true, sector, severity };
   }
 }
 

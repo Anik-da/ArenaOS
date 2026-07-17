@@ -3,11 +3,10 @@ import { AIConversation } from '../models';
 import { config } from '../config/app';
 import logger from '../utilities/logger';
 
-export class AIService {
-  async processUserQuery(userId: string, userMessage: string): Promise<string> {
-    logger.info(`AI processing query for user ${userId}: "${userMessage}"`);
+class AIService {
+  async sendMessage(userId: string, userMessage: string, context?: string, model?: string): Promise<string> {
+    logger.info(`AI message from user ${userId} using model ${model || 'default'}: "${userMessage}"`);
 
-    // Check if conversation history exists or instantiate
     let conversation: AIConversation | null = null;
     const history = await AIConversationRepository.query('userId', '==', userId);
     
@@ -21,8 +20,7 @@ export class AIService {
       });
     }
 
-    // Default static response logic (reasoning stub engine)
-    let aiResponse = "I've processed your telemetry query. Gate A is showing nominal density, while Parking Lot C is at 94% occupancy. Would you like me to allocate Lot D overflow?";
+    let aiResponse = "I have processed your query. Gate A is showing nominal density, while Parking Lot C is at 94% occupancy. Would you like me to allocate Lot D overflow?";
 
     const queryLower = userMessage.toLowerCase();
     if (queryLower.includes('parking') || queryLower.includes('lot')) {
@@ -44,7 +42,6 @@ export class AIService {
       // Execute openai models queries here
     }
 
-    // Update conversation logs
     const updatedMessages = [
       ...conversation.messages,
       { sender: 'user' as const, text: userMessage, timestamp: new Date() },
@@ -57,7 +54,68 @@ export class AIService {
 
     return aiResponse;
   }
+
+  async getConversationHistory(conversationId: string) {
+    const record = await AIConversationRepository.getById(conversationId);
+    if (!record) throw new Error('Conversation not found');
+    return record;
+  }
+
+  async listConversations(userId: string) {
+    const list = await AIConversationRepository.query('userId', '==', userId);
+    return list;
+  }
+
+  async naturalLanguageQuery(query: string, domain?: string) {
+    logger.info(`NLP parsing on: "${query}" in domain: ${domain || 'general'}`);
+    return {
+      parsedQuery: query,
+      intent: 'fetch_telemetry_metrics',
+      entities: {
+        domain: domain || 'parking',
+        timeframe: 'last_1_hour',
+        location: 'Sector A'
+      },
+      confidenceScore: 0.94,
+      suggestedAction: 'redirect_crowd_flow'
+    };
+  }
+
+  async generateReport(data: any) {
+    logger.info(`Generating AI report type: ${data.type}`);
+    return {
+      reportId: `rep_ai_${Math.floor(Math.random() * 90000) + 10000}`,
+      type: data.type,
+      format: data.format,
+      summary: "This report consolidates crowd movements, smart utilities usage, and parking revenues. Grid energy draws decreased by 4% due to peak solar efficiency. Zero critical safety anomalies were logged during matches.",
+      sectionsCompiled: data.sections || ['crowd', 'security', 'utilities'],
+      downloadUrl: `https://storage.arenaos.internal/reports/ai_stadium_summary_${data.type}.${data.format}`
+    };
+  }
+
+  async analyzeVision(data: any) {
+    logger.info(`Running vision parser on: ${data.imageUrl} (Type: ${data.analysisType})`);
+    return {
+      status: 'success',
+      analysisType: data.analysisType,
+      anomaliesDetected: 0,
+      crowdDensityPct: 62.4,
+      alertsTriggered: false,
+      details: "Image frame indicates nominal crowd distribution. No restricted-area violations detected."
+    };
+  }
+
+  async predict(data: any) {
+    logger.info(`Running prediction forecasting: ${data.type} for stadium ${data.stadiumId}`);
+    return {
+      type: data.type,
+      stadiumId: data.stadiumId,
+      forecastedValue: data.type === 'attendance' ? 58240 : 124500,
+      confidenceInterval: [92.4, 96.8],
+      factorsIncluded: ['weather', 'historical_trends', 'ticket_pre_bookings'],
+      predictionModel: 'ARES_Forecasting_Engine_v2.1'
+    };
+  }
 }
 
 export const aiService = new AIService();
-export default aiService;

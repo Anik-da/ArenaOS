@@ -273,3 +273,133 @@ export interface AuditLog {
   details: string;
   timestamp: Date;
 }
+
+export interface FanProfile {
+  id: string;
+  userId: string;
+  favorites: string[];
+  preferredZone?: string;
+  loyaltyPoints: number;
+  emergencyContact?: string;
+  createdAt: Date;
+}
+
+export interface AccessLog {
+  id: string;
+  stadiumId: string;
+  userId?: string;
+  gateId: string;
+  direction: 'entry' | 'exit';
+  method: 'qr' | 'badge' | 'manual';
+  timestamp: Date;
+}
+
+export interface VisitorLog {
+  id: string;
+  stadiumId: string;
+  visitorName: string;
+  purpose: string;
+  hostName?: string;
+  badgeNumber?: string;
+  checkIn: Date;
+  checkOut?: Date;
+}
+
+export interface Hospital {
+  id: string;
+  name: string;
+  distance: number;
+  capacity: number;
+  specialties: string[];
+  contactNumber: string;
+  coordinates: { lat: number; lng: number };
+}
+
+export interface Doctor {
+  id: string;
+  name: string;
+  specialization: string;
+  stadiumId?: string;
+  available: boolean;
+  contactNumber: string;
+}
+
+export interface Ambulance {
+  id: string;
+  vehicleNumber: string;
+  stadiumId: string;
+  status: 'available' | 'dispatched' | 'returning' | 'maintenance';
+  currentLocation?: { lat: number; lng: number };
+  equipment: string[];
+}
+
+export interface PatientQueue {
+  id: string;
+  stadiumId: string;
+  medicalEventId: string;
+  priority: 'critical' | 'urgent' | 'normal';
+  estimatedWaitMinutes: number;
+  position: number;
+  timestamp: Date;
+}
+
+export interface PracticeSession {
+  id: string;
+  teamId: string;
+  venueId: string;
+  tournamentId?: string;
+  dateTime: Date;
+  durationMinutes: number;
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  notes?: string;
+}
+
+export interface Gate {
+  id: string;
+  stadiumId: string;
+  gateNumber: string;
+  zone: string;
+  status: 'open' | 'closed' | 'restricted' | 'emergency_only';
+  throughputPerMinute: number;
+  currentQueueLength: number;
+}
+
+export interface Seat {
+  id: string;
+  stadiumId: string;
+  zone: string;
+  row: string;
+  number: string;
+  status: 'available' | 'booked' | 'occupied' | 'blocked';
+  category: 'standard' | 'vip' | 'premium' | 'accessible';
+}
+
+export interface CameraPosition {
+  id: string;
+  stadiumId: string;
+  cameraId: string;
+  zone: string;
+  coordinates: { x: number; y: number; z: number };
+  streamUrl: string;
+  status: 'active' | 'offline' | 'maintenance';
+}
+
+export interface EmergencyVehicle {
+  id: string;
+  stadiumId: string;
+  type: 'ambulance' | 'fire_truck' | 'police';
+  vehicleNumber: string;
+  status: 'standby' | 'dispatched' | 'returning';
+  currentLocation?: { lat: number; lng: number };
+}
+
+export interface CrowdZone {
+  id: string;
+  stadiumId: string;
+  zoneName: string;
+  maxCapacity: number;
+  currentOccupancy: number;
+  densityPercentage: number;
+  status: 'normal' | 'crowded' | 'critical';
+  gates: string[];
+}
