@@ -83,6 +83,8 @@ function AssistantOrb() {
   );
 }
 
+import { fetchAPI } from '@/lib/api';
+
 function AssistantPanel({ onClose }: { onClose: () => void }) {
   const [messages, setMessages] = useState<Msg[]>([
     { role: 'ai', text: 'ARES Copilot online. I am connected to all stadium subsystems. How can I assist your operation?' },
@@ -101,11 +103,22 @@ function AssistantPanel({ onClose }: { onClose: () => void }) {
     setMessages((m) => [...m, { role: 'user', text: q }]);
     setInput('');
     setThinking(true);
-    setTimeout(() => {
-      const reply = SCRIPTED[q] ?? 'I have analyzed the request across all connected subsystems. Detailed telemetry is available in the Command Center. Would you like me to initiate a recommended action?';
-      setMessages((m) => [...m, { role: 'ai', text: reply }]);
-      setThinking(false);
-    }, 1600);
+
+    fetchAPI('/api/ai/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message: q, model: 'default' }),
+    })
+      .then((res) => {
+        setMessages((m) => [...m, { role: 'ai', text: res.data }]);
+      })
+      .catch((err) => {
+        console.warn('Backend AI query failed, falling back to mock response:', err.message);
+        const reply = SCRIPTED[q] ?? 'I have analyzed the request across all connected subsystems. Detailed telemetry is available in the Command Center. Would you like me to initiate a recommended action?';
+        setMessages((m) => [...m, { role: 'ai', text: reply }]);
+      })
+      .finally(() => {
+        setThinking(false);
+      });
   }
 
   return (

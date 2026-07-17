@@ -2,34 +2,9 @@ import Redis from 'ioredis';
 import logger from '../utilities/logger';
 
 let redisClient: any;
-let isRedisMock = false;
+let isRedisMock = true;
 
-try {
-  const host = process.env.REDIS_HOST || 'localhost';
-  const port = parseInt(process.env.REDIS_PORT || '6379');
-  const password = process.env.REDIS_PASSWORD || undefined;
-
-  // Set timeout to avoid blocking startup if Redis is down
-  redisClient = new Redis({
-    host,
-    port,
-    password,
-    maxRetriesPerRequest: 1,
-    connectTimeout: 2000,
-  });
-
-  redisClient.on('connect', () => {
-    logger.info('Connected to Redis server successfully.');
-  });
-
-  redisClient.on('error', (err: any) => {
-    logger.warn(`Redis client error: ${err.message}. Initializing Mock Redis In-Memory Client.`);
-    fallbackToMock();
-  });
-} catch (error: any) {
-  logger.warn(`Redis initialization threw error: ${error.message}. Initializing Mock Redis Client.`);
-  fallbackToMock();
-}
+const useRedis = process.env.USE_REDIS === 'true';
 
 function fallbackToMock() {
   isRedisMock = true;
@@ -56,6 +31,38 @@ function fallbackToMock() {
       return 'OK';
     }
   };
+}
+
+if (useRedis) {
+  try {
+    isRedisMock = false;
+    const host = process.env.REDIS_HOST || 'localhost';
+    const port = parseInt(process.env.REDIS_PORT || '6379');
+    const password = process.env.REDIS_PASSWORD || undefined;
+
+    redisClient = new Redis({
+      host,
+      port,
+      password,
+      maxRetriesPerRequest: 1,
+      connectTimeout: 2000,
+    });
+
+    redisClient.on('connect', () => {
+      logger.info('Connected to Redis server successfully.');
+    });
+
+    redisClient.on('error', (err: any) => {
+      logger.warn(`Redis connection error: ${err.message}. Falling back to mock.`);
+      fallbackToMock();
+    });
+  } catch (error: any) {
+    logger.warn(`Redis connection failed: ${error.message}. Falling back to mock.`);
+    fallbackToMock();
+  }
+} else {
+  logger.info('Redis integration is disabled (USE_REDIS is not "true"). Active fallback: Mock Redis Client.');
+  fallbackToMock();
 }
 
 export { redisClient, isRedisMock };

@@ -219,9 +219,12 @@ function MetricCard({ m, index, valOverride }: { m: Metric; index: number; valOv
   );
 }
 
+import { getSocket } from '@/lib/api';
+
 export default function CommandCenter() {
   const [clock, setClock] = useState('');
   const [liveMetricsVals, setLiveMetricsVals] = useState<Record<string, number>>({});
+  const [isBackendConnected, setIsBackendConnected] = useState(false);
 
   // Initialize and run live telemetry updates every 3 seconds
   useEffect(() => {
@@ -232,7 +235,11 @@ export default function CommandCenter() {
     });
     setLiveMetricsVals(initVals);
 
+    // Set up local simulated fallback timer
     const telemetryTimer = setInterval(() => {
+      // Only apply simulated updates if backend is not currently pushing updates
+      if (isBackendConnected) return;
+
       setLiveMetricsVals(prev => {
         const next = { ...prev };
         Object.keys(next).forEach(key => {
@@ -266,11 +273,71 @@ export default function CommandCenter() {
       setClock(new Date().toLocaleTimeString('en-US', { hour12: false }));
     }, 1000);
 
+    // Socket.IO Integration
+    const socket = getSocket();
+
+    const onConnect = () => {
+      setIsBackendConnected(true);
+      socket.emit('join:room', 'stadium:utilities');
+      socket.emit('join:room', 'stadium:crowd');
+      socket.emit('join:room', 'stadium:live');
+    };
+
+    const onDisconnect = () => {
+      setIsBackendConnected(false);
+    };
+
+    const onUtilitiesTelemetry = (data: any) => {
+      setIsBackendConnected(true);
+      setLiveMetricsVals(prev => ({
+        ...prev,
+        enr: parseFloat((data.energy / 1000).toFixed(1)), // KW to MW
+        wat: Math.round(data.waterLitersSec / 100), // Liters to kL
+        emg: data.leakDetected ? 1 : prev.emg || 0,
+      }));
+    };
+
+    const onCrowdTelemetry = (data: any) => {
+      setIsBackendConnected(true);
+      if (data.zones && data.zones.length > 0) {
+        const avgDensity = data.zones.reduce((sum: number, z: any) => sum + z.density, 0) / data.zones.length;
+        setLiveMetricsVals(prev => ({
+          ...prev,
+          att: Math.round(70000 + (avgDensity / 100) * 9000), // scale dynamically with density
+        }));
+      }
+    };
+
+    const onWeatherTelemetry = (data: any) => {
+      setIsBackendConnected(true);
+      if (data.temp) {
+        setLiveMetricsVals(prev => ({
+          ...prev,
+          wtr: Math.round(data.temp),
+        }));
+      }
+    };
+
+    // Attach listeners
+    if (socket.connected) {
+      onConnect();
+    }
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('telemetry:utilities', onUtilitiesTelemetry);
+    socket.on('telemetry:crowd', onCrowdTelemetry);
+    socket.on('telemetry:weather', onWeatherTelemetry);
+
     return () => {
       clearInterval(telemetryTimer);
       clearInterval(clockTimer);
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('telemetry:utilities', onUtilitiesTelemetry);
+      socket.off('telemetry:crowd', onCrowdTelemetry);
+      socket.off('telemetry:weather', onWeatherTelemetry);
     };
-  }, []);
+  }, [isBackendConnected]);
 
   return (
     <section id="command" className="relative py-32 md:py-44">
