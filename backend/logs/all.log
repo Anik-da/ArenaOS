@@ -16,3 +16,22 @@
 [2026-07-17 19:38:25:3825] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
 [2026-07-17 19:38:25:3825] [[32minfo[39m]: [32m===============================================[39m
 [2026-07-17 19:38:29:3829] [[32minfo[39m]: [32mFetching weather details for stadium: stadium_main_1[39m
+[2026-07-17 19:46:03:463] [[33mwarn[39m]: [33mFirebase initialization failed: No Firebase configuration details provided in environment variables.. Initializing Mock Firestore/Auth Fallback.[39m
+[2026-07-17 19:46:03:463] [[32minfo[39m]: [32mRedis integration is disabled (USE_REDIS is not "true"). Active fallback: Mock Redis Client.[39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32mSocket.IO running in standalone mode (Redis mock active).[39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32m ARES AI Platform Axes Backend running in [development][39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32m REST APIs served at http://localhost:5000/api[39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32m Swagger Docs available at http://localhost:5000/docs[39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
+[2026-07-17 19:46:04:464] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-17 19:46:17:4617] [[33mwarn[39m]: [33mFirebase initialization failed: No Firebase configuration details provided in environment variables.. Initializing Mock Firestore/Auth Fallback.[39m
+[2026-07-17 19:46:17:4617] [[32minfo[39m]: [32mRedis integration is disabled (USE_REDIS is not "true"). Active fallback: Mock Redis Client.[39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32mSocket.IO running in standalone mode (Redis mock active).[39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m ARES AI Platform Axes Backend running in [development][39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m REST APIs served at http://localhost:5000/api[39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m Swagger Docs available at http://localhost:5000/docs[39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
+[2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-17 19:46:22:4622] [[32minfo[39m]: [32mFetching weather details for stadium: stadium_main_1[39m
