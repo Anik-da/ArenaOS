@@ -71,8 +71,18 @@ export default function BootLoader() {
         
         // Trigger completion particle burst & split curtain reveal using GSAP
         setTimeout(() => {
-          triggerCompletionSequence();
+          try {
+            triggerCompletionSequence();
+          } catch (err) {
+            console.warn('BootLoader completion animation failed, forcing visibility off:', err);
+            setVisible(false);
+          }
         }, 500);
+
+        // Fail-safe to guarantee loader disappears even if refs are null or GSAP crashes
+        setTimeout(() => {
+          setVisible(false);
+        }, 1800);
       }
     }, 280);
 
@@ -80,7 +90,10 @@ export default function BootLoader() {
   }, []);
 
   const triggerCompletionSequence = () => {
-    if (!containerRef.current || !leftPanelRef.current || !rightPanelRef.current || !contentRef.current) return;
+    if (!containerRef.current || !leftPanelRef.current || !rightPanelRef.current || !contentRef.current) {
+      setVisible(false);
+      return;
+    }
 
     // Create particle burst
     if (particlesRef.current) {
