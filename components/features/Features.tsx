@@ -21,6 +21,7 @@ import { Reveal, TiltCard, useMouseLight } from '@/components/primitives/Motion'
 import { cn } from '@/lib/utils';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { scrollToId } from '@/components/providers/SmoothScrollProvider';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -33,6 +34,7 @@ type Feature = {
   accent: string;
   glow: string;
   span?: 'wide' | 'tall' | 'normal';
+  targetId: string;
 };
 
 const FEATURES: Feature[] = [
@@ -43,6 +45,7 @@ const FEATURES: Feature[] = [
     accent: '#ff6b2c',
     glow: 'rgba(255,107,44,0.15)',
     span: 'wide',
+    targetId: 'command',
   },
   {
     icon: Boxes,
@@ -51,6 +54,7 @@ const FEATURES: Feature[] = [
     accent: '#8b5cf6',
     glow: 'rgba(139,92,246,0.15)',
     span: 'tall',
+    targetId: 'twin',
   },
   {
     icon: Users,
@@ -58,6 +62,7 @@ const FEATURES: Feature[] = [
     desc: 'Real-time density, flow prediction and surge alerts across every gate.',
     accent: '#5eead4',
     glow: 'rgba(94,234,212,0.15)',
+    targetId: 'command',
   },
   {
     icon: ShieldCheck,
@@ -65,6 +70,7 @@ const FEATURES: Feature[] = [
     desc: 'Threat detection, anomaly scoring and coordinated response orchestration.',
     accent: '#ff6b2c',
     glow: 'rgba(255,107,44,0.15)',
+    targetId: 'command',
   },
   {
     icon: HeartPulse,
@@ -72,6 +78,7 @@ const FEATURES: Feature[] = [
     desc: 'Predicts medical demand, pre-positions teams, triggers rapid response.',
     accent: '#ff4d6d',
     glow: 'rgba(255,77,109,0.15)',
+    targetId: 'command',
   },
   {
     icon: Plane,
@@ -79,6 +86,7 @@ const FEATURES: Feature[] = [
     desc: 'Autonomous surveillance drones with live feed routing and geofencing.',
     accent: '#5eead4',
     glow: 'rgba(94,234,212,0.15)',
+    targetId: 'twin',
   },
   {
     icon: CloudSun,
@@ -86,6 +94,7 @@ const FEATURES: Feature[] = [
     desc: 'Hyper-local forecasting and play-impact modeling down to the pitch.',
     accent: '#e8b04b',
     glow: 'rgba(232,176,75,0.15)',
+    targetId: 'command',
   },
   {
     icon: Car,
@@ -93,6 +102,7 @@ const FEATURES: Feature[] = [
     desc: 'Predictive bay allocation, dynamic pricing and live wayfinding.',
     accent: '#8b5cf6',
     glow: 'rgba(139,92,246,0.15)',
+    targetId: 'twin',
   },
   {
     icon: Smile,
@@ -100,6 +110,7 @@ const FEATURES: Feature[] = [
     desc: 'Personalized journeys — from entry to seat, concessions to replay.',
     accent: '#ff6b2c',
     glow: 'rgba(255,107,44,0.15)',
+    targetId: 'command',
   },
   {
     icon: BarChart3,
@@ -107,6 +118,7 @@ const FEATURES: Feature[] = [
     desc: 'Cross-domain intelligence fused into a single decision surface.',
     accent: '#e8b04b',
     glow: 'rgba(232,176,75,0.15)',
+    targetId: 'analytics',
   },
   {
     icon: Bot,
@@ -115,6 +127,7 @@ const FEATURES: Feature[] = [
     accent: '#5eead4',
     glow: 'rgba(94,234,212,0.15)',
     span: 'wide',
+    targetId: 'copilot',
   },
 ];
 
@@ -136,9 +149,10 @@ function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
         <motion.div
           ref={ref}
           onMouseMove={onMove}
+          onClick={() => scrollToId(feature.targetId)}
           whileHover={{ y: -6 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          className="glass-card relative h-full overflow-hidden rounded-3xl p-8 flex flex-col justify-between group/card border-white/5 hover:border-white/10"
+          className="glass-card relative h-full overflow-hidden rounded-3xl p-8 flex flex-col justify-between group/card border-white/5 hover:border-white/10 cursor-pointer"
         >
           {/* Animated spot mouse follow light */}
           <motion.div
@@ -181,7 +195,7 @@ function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
             style={{ color: feature.accent }}
           >
             <span>Explore module</span>
-            <ArrowRight size={12} className="transition-transform duration-300 group-hover/card:translate-x-1" />
+            <ArrowRight size={12} className="transition-transform duration-300 group-hover/card:translate-x-1.5" />
           </div>
 
           {/* Animated border lighting overlay */}
