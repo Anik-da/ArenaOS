@@ -88,6 +88,7 @@ export default function Hero() {
 
         {/* Character/Word Reveal Headline */}
         <AnimatedText
+          as="span"
           text="The Future of"
           className="font-display text-[clamp(2.5rem,7vw,6.5rem)] font-extrabold leading-[0.9] tracking-tight text-white/95"
           delay={0.4}

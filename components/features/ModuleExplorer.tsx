@@ -186,6 +186,7 @@ export default function ModuleExplorer({ feature, onClose }: ModuleExplorerProps
 
           <button
             onClick={onClose}
+            aria-label="Close module details modal"
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/[0.03] border border-white/5 text-white/40 hover:text-white/80 hover:bg-white/[0.06] transition-all"
           >
             <X size={16} />
@@ -273,8 +274,9 @@ export default function ModuleExplorer({ feature, onClose }: ModuleExplorerProps
                       </div>
                     </div>
                     <div>
-                      <label className="text-[11px] font-mono uppercase text-white/40 font-bold block mb-2">Stadium Sector Detail</label>
+                      <label htmlFor="stadium-sector-select" className="text-[11px] font-mono uppercase text-white/40 font-bold block mb-2">Stadium Sector Detail</label>
                       <select
+                        id="stadium-sector-select"
                         value={selectedTwinSector}
                         onChange={(e) => setSelectedTwinSector(e.target.value)}
                         className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 focus:outline-none"
@@ -525,8 +527,9 @@ export default function ModuleExplorer({ feature, onClose }: ModuleExplorerProps
                       </div>
                     </div>
                     <div>
-                      <label className="text-[11px] font-mono uppercase text-white/40 font-bold block mb-1.5">Signage Message Preview</label>
+                      <label htmlFor="signage-message-input" className="text-[11px] font-mono uppercase text-white/40 font-bold block mb-1.5">Signage Message Preview</label>
                       <input
+                        id="signage-message-input"
                         value={signMessage}
                         onChange={(e) => setSignMessage(e.target.value)}
                         className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white/80 focus:outline-none"
@@ -853,11 +856,13 @@ export default function ModuleExplorer({ feature, onClose }: ModuleExplorerProps
                         value={chatInput}
                         onChange={(e) => setChatInput(e.target.value)}
                         placeholder="Ask copilot something..."
+                        aria-label="Ask copilot something"
                         className="flex-1 bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 focus:outline-none"
                       />
                       <button
                         type="submit"
                         disabled={simulating}
+                        aria-label="Send copilot message"
                         className="flex h-9 w-9 items-center justify-center rounded-xl bg-ares-mint text-zinc-950 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
                       >
                         <Send size={14} />

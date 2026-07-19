@@ -266,16 +266,18 @@ export function AnimatedText({
   className,
   delay = 0,
   once = true,
+  as = 'h2',
 }: {
   text: string;
   className?: string;
   delay?: number;
   once?: boolean;
+  as?: 'h1' | 'h2' | 'h3' | 'span' | 'div';
 }) {
   const containerRef = useRef<HTMLHeadingElement>(null);
   const inView = useInView(containerRef, { once, margin: '-10% 0px' });
 
-  // Word-by-word reveal using Framer Motion with beautiful character-level staggered animations
+  // Word-by-word reveal using Framer Motion with character-level staggered animations
   const words = text.split(' ');
 
   const containerVariants = {
@@ -301,8 +303,10 @@ export function AnimatedText({
     },
   };
 
+  const MotionComponent = motion[as] as any;
+
   return (
-    <motion.h1
+    <MotionComponent
       ref={containerRef}
       variants={containerVariants}
       initial="hidden"
@@ -316,7 +320,7 @@ export function AnimatedText({
           </motion.span>
         </span>
       ))}
-    </motion.h1>
+    </MotionComponent>
   );
 }
 

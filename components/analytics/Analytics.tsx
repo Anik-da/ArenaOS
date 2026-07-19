@@ -76,7 +76,7 @@ function Ring({ value, color, label, delay }: { value: number; color: string; la
   return (
     <div className="flex flex-col items-center group/ring">
       <div className="relative h-24 w-24 transition-transform duration-300 group-hover/ring:scale-105">
-        <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90">
+        <svg role="img" aria-label={`Performance circular indicator for ${label} showing ${value}%`} viewBox="0 0 80 80" className="h-full w-full -rotate-90">
           <circle cx="40" cy="40" r={r} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="5" />
           <motion.circle
             cx="40" cy="40" r={r} fill="none" stroke={color} strokeWidth="5.5" strokeLinecap="round"
@@ -145,7 +145,7 @@ export default function Analytics() {
                 </div>
               </div>
               
-              <div className="w-full h-[220px]">
+              <div className="w-full h-[220px]" role="img" aria-label="Area chart showing live attendance flow over the event day">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={ATTENDANCE} margin={{ left: -15, right: 10, top: 10, bottom: 0 }}>
                     <defs>
@@ -174,7 +174,7 @@ export default function Analytics() {
               <h3 className="mb-6 font-display text-base font-bold text-white/90">Revenue Sources</h3>
               
               <div className="relative flex justify-center py-2">
-                <div className="w-full h-[200px]">
+                <div className="w-full h-[200px]" role="img" aria-label="Pie chart showing revenue distribution by source">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -223,7 +223,7 @@ export default function Analytics() {
                 <span className="text-[10px] text-ares-mint font-bold font-mono uppercase tracking-wider">Trend +8.1%</span>
               </div>
               
-              <div className="w-full h-[200px]">
+              <div className="w-full h-[200px]" role="img" aria-label="Bar chart showing weekly revenue trend">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={REVENUE} margin={{ left: -15, right: 10, top: 10, bottom: 0 }}>
                     <defs>

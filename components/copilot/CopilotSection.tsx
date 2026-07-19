@@ -235,11 +235,13 @@ function AssistantPanel({ onClose }: { onClose: () => void }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask ARES anything…"
+            aria-label="Ask ARES AI Copilot"
             className="flex-1 rounded-xl bg-white/[0.02] px-4 py-3 text-sm text-white/95 placeholder:text-white/20 outline-none ring-1 ring-white/[0.04] focus:ring-ares-ember/40 focus:bg-white/[0.04] transition-all"
           />
           <button
             type="submit"
             data-cursor
+            aria-label="Send message to ARES AI Copilot"
             className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-ares-ember to-ares-emberDark text-white/95 border border-ares-ember/20 shadow-[0_4px_12px_rgba(255,107,44,0.2)] hover:shadow-[0_4px_16px_rgba(255,107,44,0.35)] transition-all hover:scale-105 active:scale-95"
           >
             <Send size={15} />

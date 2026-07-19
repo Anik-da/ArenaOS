@@ -9,7 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:backend",
+    "test:backend": "cd backend && npm run test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

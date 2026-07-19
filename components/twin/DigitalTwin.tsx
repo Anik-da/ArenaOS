@@ -135,6 +135,7 @@ export default function DigitalTwin() {
                       key={i}
                       data-cursor
                       data-cursor-label={b.label}
+                      aria-label={b.label}
                       onClick={b.fn}
                       className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.02] border border-white/[0.04] text-white/50 transition-all hover:bg-white/[0.06] hover:text-white"
                     >
@@ -152,6 +153,8 @@ export default function DigitalTwin() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(6,6,10,0.85))]" />
 
                 <motion.svg
+                  role="img"
+                  aria-label="Stadium digital twin interactive map visualization"
                   viewBox="0 0 300 300"
                   className="absolute inset-0 h-full w-full"
                   animate={{ scale: zoom, rotate }}
@@ -344,6 +347,8 @@ export default function DigitalTwin() {
                       key={l.id}
                       data-cursor
                       data-cursor-label={on ? `Hide ${l.label}` : `Show ${l.label}`}
+                      aria-label={on ? `Hide ${l.label} layer` : `Show ${l.label} layer`}
+                      aria-pressed={on}
                       onClick={() => toggle(l.id)}
                       className={cn(
                         'flex items-center gap-2 rounded-xl border p-3 text-left transition-all active:scale-95 duration-200',

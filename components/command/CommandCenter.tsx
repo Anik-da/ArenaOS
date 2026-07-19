@@ -79,7 +79,7 @@ function StadiumRadar() {
       <div className="absolute inset-0 rounded-full bg-ares-ember/5 blur-[50px] animate-pulse" />
       <div className="absolute inset-4 rounded-full bg-ares-mint/[0.02] blur-[30px]" />
 
-      <svg viewBox="0 0 200 200" className="relative h-full w-full">
+      <svg role="img" aria-label="Stadium active telemetry radar scan" viewBox="0 0 200 200" className="relative h-full w-full">
         <defs>
           <radialGradient id="radar-core" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ff6b2c" stopOpacity="0.3" />

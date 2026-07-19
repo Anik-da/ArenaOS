@@ -58,6 +58,7 @@ export default function FloatingNav() {
           <button
             onClick={() => scrollToId('hero')}
             data-cursor
+            aria-label="Go to Home"
             className="group flex items-center gap-2.5"
           >
             <motion.div 
@@ -99,6 +100,7 @@ export default function FloatingNav() {
             <MagneticButton
               cursorLabel="Enter"
               onClick={() => scrollToId('command')}
+              aria-label="Launch ARES Platform"
               className="hidden rounded-full bg-gradient-to-r from-ares-ember to-ares-emberDark px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white border border-ares-ember/20 shadow-[0_4px_16px_rgba(255,107,44,0.2)] md:block hover:scale-[1.03] active:scale-[0.97]"
             >
               Launch Platform
@@ -106,6 +108,8 @@ export default function FloatingNav() {
             <button
               data-cursor
               onClick={() => setMobileOpen((o) => !o)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.04] text-white/60 md:hidden border border-white/[0.05]"
             >
               {mobileOpen ? <X size={16} /> : <Menu size={16} />}
@@ -144,6 +148,7 @@ export default function FloatingNav() {
                   scrollToId('command');
                   setMobileOpen(false);
                 }}
+                aria-label="Launch ARES Platform"
                 className="mt-3.5 w-full rounded-2xl bg-gradient-to-r from-ares-ember to-ares-emberDark px-4.5 py-3.5 text-center text-sm font-bold uppercase tracking-wider text-white shadow-medium"
               >
                 Launch Platform

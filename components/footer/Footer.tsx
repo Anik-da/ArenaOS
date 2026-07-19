@@ -84,6 +84,7 @@ export default function Footer() {
                     key={i}
                     data-cursor
                     data-cursor-label={s.label}
+                    aria-label={s.label}
                     className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.04] bg-white/[0.01] text-white/40 transition-all duration-300 hover:text-white"
                     style={{
                       contentVisibility: 'auto',
