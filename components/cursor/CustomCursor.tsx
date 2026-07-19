@@ -16,10 +16,14 @@ export default function CustomCursor() {
   const labelRef = useRef<HTMLDivElement>(null);
   const clickWaveRef = useRef<SVGSVGElement>(null);
 
-  // Keep track of mouse position for GSAP quickTo hooks
-  const mousePos = useRef({ x: -100, y: -100 });
+  // Keep track of positions
+  const mouse = useRef({ x: -100, y: -100 });
+  const ring = useRef({ x: -100, y: -100 });
+  const dot = useRef({ x: -100, y: -100 });
+  const trails = useRef<{ x: number; y: number }[]>(
+    Array.from({ length: 6 }).map(() => ({ x: -100, y: -100 }))
+  );
 
-  // Array of trail dots
   const trailRefs = useRef<HTMLDivElement[]>([]);
   const trailCount = 6;
 
@@ -44,53 +48,63 @@ export default function CustomCursor() {
     setEnabled(true);
     document.body.classList.add('has-custom-cursor');
 
-    // Create GSAP quickTo tweens for buttery smooth 120fps movements
-    const ringMoveX = gsap.quickTo(ringRef.current, 'x', { duration: 0.4, ease: 'power3.out' });
-    const ringMoveY = gsap.quickTo(ringRef.current, 'y', { duration: 0.4, ease: 'power3.out' });
-
-    const dotMoveX = gsap.quickTo(dotRef.current, 'x', { duration: 0.1, ease: 'power2.out' });
-    const dotMoveY = gsap.quickTo(dotRef.current, 'y', { duration: 0.1, ease: 'power2.out' });
-
-    // Track move
+    // 1. Move Listener: update coordinates instantly (very cheap)
     const move = (e: MouseEvent) => {
-      const { clientX: x, clientY: y } = e;
-      mousePos.current = { x, y };
+      mouse.current.x = e.clientX;
+      mouse.current.y = e.clientY;
+    };
 
-      ringMoveX(x);
-      ringMoveY(y);
-      dotMoveX(x);
-      dotMoveY(y);
+    // 2. High performance requestAnimationFrame loop for hardware-sync updates
+    let rafId = 0;
+    const tick = () => {
+      // Lerp dot (fast follow)
+      dot.current.x += (mouse.current.x - dot.current.x) * 0.45;
+      dot.current.y += (mouse.current.y - dot.current.y) * 0.45;
 
-      // Smooth lag trails for comet effect
-      trailRefs.current.forEach((t, index) => {
-        if (!t) return;
-        const delay = (index + 1) * 0.05;
-        gsap.to(t, {
-          x,
-          y,
-          duration: delay,
-          ease: 'power2.out',
-        });
-      });
+      // Lerp ring (smooth lag behind dot)
+      ring.current.x += (mouse.current.x - ring.current.x) * 0.18;
+      ring.current.y += (mouse.current.y - ring.current.y) * 0.18;
 
-      // Contextual color detection based on scroll position / elements under cursor
-      const element = document.elementFromPoint(x, y);
-      const section = element?.closest('section');
-      
-      if (section) {
-        const id = section.id;
-        if (id === 'hero') setColorTheme('ember');
-        else if (id === 'features') setColorTheme('ember');
-        else if (id === 'command') setColorTheme('mint');
-        else if (id === 'twin') setColorTheme('violet');
-        else if (id === 'analytics') setColorTheme('gold');
-        else if (id === 'copilot') setColorTheme('mint');
-        else setColorTheme('default');
+      // Direct DOM manipulation bypassing React render pipeline
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${dot.current.x}px, ${dot.current.y}px, 0) translate(-50%, -50%)`;
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
       }
 
-      // Check interactive hovers
+      // Dynamic trail lerping for comet tail effect
+      let prevX = dot.current.x;
+      let prevY = dot.current.y;
+      trails.current.forEach((t, i) => {
+        t.x += (prevX - t.x) * 0.35;
+        t.y += (prevY - t.y) * 0.35;
+
+        const el = trailRefs.current[i];
+        if (el) {
+          el.style.transform = `translate3d(${t.x}px, ${t.y}px, 0) translate(-50%, -50%)`;
+        }
+        prevX = t.x;
+        prevY = t.y;
+      });
+
+      // Update interactive label position
+      if (labelRef.current) {
+        labelRef.current.style.transform = `translate3d(${mouse.current.x + 22}px, ${mouse.current.y + 22}px, 0)`;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    // 3. Document level hover detection - completely avoids layout reflows from document.elementFromPoint
+    const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
-      const interactive = target?.closest(
+      if (!target) return;
+
+      // Interactive element checks
+      const interactive = target.closest(
         'a, button, [role="button"], [data-cursor], input, textarea, select, [data-cursor-label]'
       ) as HTMLElement | null;
 
@@ -101,17 +115,28 @@ export default function CustomCursor() {
         setVariant('default');
         setLabel('');
       }
+
+      // Color theme zone checks based on nearest section
+      const section = target.closest('section');
+      if (section) {
+        const id = section.id;
+        if (id === 'hero') setColorTheme('ember');
+        else if (id === 'features') setColorTheme('ember');
+        else if (id === 'command') setColorTheme('mint');
+        else if (id === 'twin') setColorTheme('violet');
+        else if (id === 'analytics') setColorTheme('gold');
+        else if (id === 'copilot') setColorTheme('mint');
+        else setColorTheme('default');
+      }
     };
 
-    // Click effect (Shockwave ripple)
-    const down = (e: MouseEvent) => {
+    // 4. Click ripple effect (one-off GSAP trigger)
+    const handleMouseDown = (e: MouseEvent) => {
       const { clientX: x, clientY: y } = e;
 
-      // Pulse dot and ring
       gsap.to(dotRef.current, { scale: 0.5, duration: 0.1 });
       gsap.to(ringRef.current, { scale: 0.8, duration: 0.1 });
 
-      // SVG Click Ripple wave
       if (clickWaveRef.current) {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', x.toString());
@@ -140,65 +165,73 @@ export default function CustomCursor() {
       }
     };
 
-    const up = () => {
+    const handleMouseUp = () => {
       gsap.to(dotRef.current, { scale: 1, duration: 0.2 });
       gsap.to(ringRef.current, { scale: 1, duration: 0.2 });
     };
 
+    // Bind event listeners
     window.addEventListener('mousemove', move);
-    window.addEventListener('mousedown', down);
-    window.addEventListener('mouseup', up);
+    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener('mousemove', move);
-      window.removeEventListener('mousedown', down);
-      window.removeEventListener('mouseup', up);
+      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
       document.body.classList.remove('has-custom-cursor');
     };
-  }, [colorTheme]);
+  }, [colorTheme, variant]);
 
   // Handle ring morphing animations when interactive elements are hovered
   useEffect(() => {
     if (!enabled) return;
 
-    if (variant === 'hover') {
-      // Morph ring into a magnetic/scanner box
-      gsap.to(ringRef.current, {
-        width: 60,
-        height: 60,
-        borderRadius: '12px',
-        rotation: 45,
-        borderColor: getThemeColorHex(true),
-        boxShadow: `0 0 16px ${getThemeColorHex(false)}`,
-        duration: 0.3,
-        ease: 'back.out(1.7)',
-      });
-      gsap.to(dotRef.current, {
-        backgroundColor: getThemeColorHex(true),
-        scale: 1.4,
-        duration: 0.2,
-      });
-    } else {
-      // Normal circular ring
-      gsap.to(ringRef.current, {
-        width: 32,
-        height: 32,
-        borderRadius: '50%',
-        rotation: 0,
-        borderColor: colorTheme === 'default' ? 'rgba(255,255,255,0.25)' : getThemeColorHex(true),
-        boxShadow: 'none',
-        duration: 0.3,
-        ease: 'power2.out',
-      });
-      gsap.to(dotRef.current, {
-        backgroundColor: colorTheme === 'default' ? 'rgba(255,255,255,0.85)' : getThemeColorHex(true),
-        scale: 1,
-        duration: 0.2,
-      });
+    if (ringRef.current) {
+      if (variant === 'hover') {
+        gsap.to(ringRef.current, {
+          width: 60,
+          height: 60,
+          borderRadius: '12px',
+          rotation: 45,
+          borderColor: getThemeColorHex(true),
+          boxShadow: `0 0 16px ${getThemeColorHex(false)}`,
+          duration: 0.3,
+          ease: 'back.out(1.7)',
+        });
+      } else {
+        gsap.to(ringRef.current, {
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          rotation: 0,
+          borderColor: colorTheme === 'default' ? 'rgba(255,255,255,0.25)' : getThemeColorHex(true),
+          boxShadow: 'none',
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
+    }
+
+    if (dotRef.current) {
+      if (variant === 'hover') {
+        gsap.to(dotRef.current, {
+          backgroundColor: getThemeColorHex(true),
+          scale: 1.4,
+          duration: 0.2,
+        });
+      } else {
+        gsap.to(dotRef.current, {
+          backgroundColor: colorTheme === 'default' ? 'rgba(255,255,255,0.85)' : getThemeColorHex(true),
+          scale: 1,
+          duration: 0.2,
+        });
+      }
     }
   }, [variant, colorTheme, enabled, getThemeColorHex]);
-
-
 
   if (!enabled) return null;
 
@@ -252,7 +285,6 @@ export default function CustomCursor() {
           ref={labelRef}
           className="absolute left-0 top-0 whitespace-nowrap rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white border pointer-events-none"
           style={{
-            transform: `translate(${mousePos.current.x + 22}px, ${mousePos.current.y + 22}px)`,
             backgroundColor: 'rgba(10,10,18,0.85)',
             borderColor: getThemeColorHex(true),
             boxShadow: `0 4px 12px rgba(0,0,0,0.5), 0 0 8px ${getThemeColorHex(false)}`,

@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import {
   CalendarClock,
   Boxes,
@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { scrollToId } from '@/components/providers/SmoothScrollProvider';
+import ModuleExplorer from './ModuleExplorer';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -131,7 +132,7 @@ const FEATURES: Feature[] = [
   },
 ];
 
-function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
+function FeatureCard({ feature, index, onExplore }: { feature: Feature; index: number; onExplore: () => void }) {
   const Icon = feature.icon;
   const { ref, x, y, onMove } = useMouseLight();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -149,7 +150,7 @@ function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
         <motion.div
           ref={ref}
           onMouseMove={onMove}
-          onClick={() => scrollToId(feature.targetId)}
+          onClick={onExplore}
           whileHover={{ y: -6 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
           className="glass-card relative h-full overflow-hidden rounded-3xl p-8 flex flex-col justify-between group/card border-white/5 hover:border-white/10 cursor-pointer"
@@ -209,6 +210,7 @@ function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
 export default function Features() {
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -282,10 +284,25 @@ export default function Features() {
         {/* Feature Grid cards container */}
         <div className="mt-20 grid auto-rows-[1fr] gap-6 md:grid-cols-3">
           {FEATURES.map((f, i) => (
-            <FeatureCard key={f.title} feature={f} index={i} />
+            <FeatureCard
+              key={f.title}
+              feature={f}
+              index={i}
+              onExplore={() => setSelectedFeature(f)}
+            />
           ))}
         </div>
       </div>
+
+      {/* Module Interactive Explorer Dialog */}
+      <AnimatePresence>
+        {selectedFeature && (
+          <ModuleExplorer
+            feature={selectedFeature}
+            onClose={() => setSelectedFeature(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

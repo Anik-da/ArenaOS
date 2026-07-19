@@ -35,3 +35,31 @@
 [2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
 [2026-07-17 19:46:18:4618] [[32minfo[39m]: [32m===============================================[39m
 [2026-07-17 19:46:22:4622] [[32minfo[39m]: [32mFetching weather details for stadium: stadium_main_1[39m
+[2026-07-17 20:13:19:1319] [[33mwarn[39m]: [33mFirebase initialization failed: No Firebase configuration details provided in environment variables.. Initializing Mock Firestore/Auth Fallback.[39m
+[2026-07-17 20:13:19:1319] [[32minfo[39m]: [32mRedis integration is disabled (USE_REDIS is not "true"). Active fallback: Mock Redis Client.[39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32mSocket.IO running in standalone mode (Redis mock active).[39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32m ARES AI Platform Axes Backend running in [development][39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32m REST APIs served at http://localhost:5000/api[39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32m Swagger Docs available at http://localhost:5000/docs[39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
+[2026-07-17 20:13:20:1320] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-17 20:13:24:1324] [[32minfo[39m]: [32mFetching weather details for stadium: stadium_main_1[39m
+[2026-07-19 18:50:30:5030] [[33mwarn[39m]: [33mFirebase initialization failed: No Firebase configuration details provided in environment variables.. Initializing Mock Firestore/Auth Fallback.[39m
+[2026-07-19 18:50:31:5031] [[32minfo[39m]: [32mRedis integration is disabled (USE_REDIS is not "true"). Active fallback: Mock Redis Client.[39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32mSocket.IO running in standalone mode (Redis mock active).[39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32m ARES AI Platform Axes Backend running in [development][39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32m REST APIs served at http://localhost:5000/api[39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32m Swagger Docs available at http://localhost:5000/docs[39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32m Socket.IO pipeline active on port 5000[39m
+[2026-07-19 18:50:34:5034] [[32minfo[39m]: [32m===============================================[39m
+[2026-07-19 18:50:38:5038] [[32minfo[39m]: [32mFetching weather details for stadium: stadium_main_1[39m
+[2026-07-19 18:51:55:5155] [[33mwarn[39m]: [33mWater Leak Detected in sector Sector B at stadium stadium_main_1[39m
+[2026-07-19 18:52:31:5231] [[32minfo[39m]: [32mSocket client connected: DF4Qt_z7pRiEK1B-AAAB[39m
+[2026-07-19 18:52:33:5233] [[32minfo[39m]: [32mSocket DF4Qt_z7pRiEK1B-AAAB joined feed channel: stadium:utilities[39m
+[2026-07-19 18:52:33:5233] [[32minfo[39m]: [32mSocket DF4Qt_z7pRiEK1B-AAAB joined feed channel: stadium:crowd[39m
+[2026-07-19 18:52:33:5233] [[32minfo[39m]: [32mSocket DF4Qt_z7pRiEK1B-AAAB joined feed channel: stadium:live[39m
+[2026-07-19 18:52:33:5233] [[32minfo[39m]: [32mSocket DF4Qt_z7pRiEK1B-AAAB joined feed channel: stadium:utilities[39m
+[2026-07-19 18:52:33:5233] [[32minfo[39m]: [32mSocket DF4Qt_z7pRiEK1B-AAAB joined feed channel: stadium:crowd[39m
+[2026-07-19 18:52:33:5233] [[32minfo[39m]: [32mSocket DF4Qt_z7pRiEK1B-AAAB joined feed channel: stadium:live[39m

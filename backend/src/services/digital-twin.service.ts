@@ -6,14 +6,16 @@ import logger from '../utilities/logger';
 
 class DigitalTwinService {
   async getState(stadiumId: string) {
-    const twinState = await DigitalTwinRepository.query('stadiumId', '==', stadiumId);
+    const [twinState, gates, drones, cameras, emergencyVehicles, crowdZones] = await Promise.all([
+      DigitalTwinRepository.query('stadiumId', '==', stadiumId),
+      this.getGateStatus(stadiumId),
+      this.getDronePositions(stadiumId),
+      this.getCameraPositions(stadiumId),
+      this.getEmergencyVehicles(stadiumId),
+      this.getCrowdZones(stadiumId)
+    ]);
+
     const layers = twinState.length > 0 ? twinState[0].layersActive : ['infrastructure', 'gates'];
-    
-    const gates = await this.getGateStatus(stadiumId);
-    const drones = await this.getDronePositions(stadiumId);
-    const cameras = await this.getCameraPositions(stadiumId);
-    const emergencyVehicles = await this.getEmergencyVehicles(stadiumId);
-    const crowdZones = await this.getCrowdZones(stadiumId);
 
     return {
       stadiumId,
@@ -22,7 +24,7 @@ class DigitalTwinService {
       dronesCount: drones.length,
       camerasCount: cameras.length,
       emergencyVehiclesCount: emergencyVehicles.length,
-      activeAlerts: emergencyVehicles.filter(v => v.status === 'dispatched').length,
+      activeAlerts: emergencyVehicles.filter((v: any) => v.status === 'dispatched').length,
       data: {
         gates,
         drones,

@@ -16,6 +16,7 @@ export const config = {
   ai: {
     geminiKey: process.env.GEMINI_API_KEY || '',
     openaiKey: process.env.OPENAI_API_KEY || '',
+    huggingfaceToken: process.env.HUGGINGFACE_TOKEN || '',
   },
   weather: {
     apiKey: process.env.OPENWEATHER_API_KEY || '',
