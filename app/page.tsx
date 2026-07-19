@@ -6,6 +6,7 @@ import AnimatedBackground from '@/components/background/AnimatedBackground';
 import BootLoader from '@/components/loader/BootLoader';
 import FloatingNav from '@/components/nav/FloatingNav';
 import Hero from '@/components/hero/Hero';
+import ChallengeObjectives from '@/components/hero/ChallengeObjectives';
 import Features from '@/components/features/Features';
 import CommandCenter from '@/components/command/CommandCenter';
 import DigitalTwin from '@/components/twin/DigitalTwin';
@@ -25,6 +26,11 @@ export default function Home() {
       <main className="relative">
         <Hero />
         
+        <div className="section-divider" />
+        <SectionTransition preset="fade-scale">
+          <ChallengeObjectives />
+        </SectionTransition>
+
         <div className="section-divider" />
         <SectionTransition preset="fade-scale">
           <Features />

@@ -5,3 +5,10 @@
 [2026-07-19 19:29:58:2958] [[31merror[39m]: [31mHugging Face chatbot call failed, using offline fallback Timeout[39m
 [2026-07-19 19:29:58:2958] [[32minfo[39m]: [32mAI message from user user-1 using model default: "main power and energy usage"[39m
 [2026-07-19 19:29:58:2958] [[31merror[39m]: [31mHugging Face chatbot call failed, using offline fallback Timeout[39m
+[2026-07-19 19:34:08:348] [[32minfo[39m]: [32mAI message from user user-1 using model default: "What is the parking status?"[39m
+[2026-07-19 19:34:08:348] [[31merror[39m]: [31mHugging Face chatbot call failed, using offline fallback Network error[39m
+[2026-07-19 19:34:08:348] [[32minfo[39m]: [32mAI message from user user-1 using model default: "Hello"[39m
+[2026-07-19 19:34:08:348] [[32minfo[39m]: [32mAI message from user user-1 using model default: "gate density levels"[39m
+[2026-07-19 19:34:08:348] [[31merror[39m]: [31mHugging Face chatbot call failed, using offline fallback Timeout[39m
+[2026-07-19 19:34:08:348] [[32minfo[39m]: [32mAI message from user user-1 using model default: "main power and energy usage"[39m
+[2026-07-19 19:34:08:348] [[31merror[39m]: [31mHugging Face chatbot call failed, using offline fallback Timeout[39m

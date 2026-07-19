@@ -1,13 +1,18 @@
 import dotenv from 'dotenv';
+import crypto from 'crypto';
+
 dotenv.config();
+
+const randomSecret = crypto.randomBytes(32).toString('hex');
+const randomRefreshSecret = crypto.randomBytes(32).toString('hex');
 
 export const config = {
   port: parseInt(process.env.PORT || '5000'),
   env: process.env.NODE_ENV || 'development',
   jwt: {
-    secret: process.env.JWT_SECRET || 'ares_ai_default_jwt_secret_key_change_in_prod',
+    secret: process.env.JWT_SECRET || randomSecret,
     expiresIn: process.env.JWT_EXPIRES_IN || '1d',
-    refreshSecret: process.env.JWT_REFRESH_SECRET || 'ares_ai_default_jwt_refresh_secret_key_change_in_prod',
+    refreshSecret: process.env.JWT_REFRESH_SECRET || randomRefreshSecret,
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
   cors: {
