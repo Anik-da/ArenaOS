@@ -801,7 +801,7 @@ export default function ModuleExplorer({ feature, onClose }: ModuleExplorerProps
                     <div className="text-xs font-semibold text-white/60">Active Spectator Vouchers</div>
                     {vouchersSent ? (
                       <div className="p-3 bg-ares-mint/15 border border-ares-mint/30 rounded-xl text-center text-xs text-ares-mint font-bold">
-                        Voucher code "ARENA15" pushed to Sectors 110-112!
+                        Voucher code &quot;ARENA15&quot; pushed to Sectors 110-112!
                       </div>
                     ) : (
                       <div className="p-3 bg-white/5 border border-white/5 rounded-xl text-center text-xs text-white/45 italic">
